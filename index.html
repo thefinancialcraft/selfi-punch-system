@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TFC- Attendance System</title>
+    <link rel="icon" type="image/png" href="fav-icon.jpg">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="eror">
+        <img src="compny-banner.png" style="width: 30vw; border-radius: 1vw; margin-top: 10px;" alt="">
+        <div class="h1">404</div>
+        <div class="h3">This System Curently Not Working On Other devices</div>
+        <div class="p">
+           Welcome to The Financial Craft! Our selfie punching attendance system is currently available only on mobile phones. We're working on expanding it to other devices, which may take 7 days to a month. Stay tuned!
+        </div>
+    </div>
+    <div class="attandnace-system">
+    
+        <div id="nav-bar">
+            <div id="nav-mob">
+                <div class="login-nav" style="display: flex;">Login Account</div>
+               <div class="login-nav-after" style="display: none;">
+                <div class="user-nav-text">
+                    <div class="user-greet-nav"><p>Good Eveining</p></div>
+                    <div class="user-name-nav"><p>DEEPAK KUMAR</p></div>
+                </div>
+                <div class="user-nav-action">
+                    <div class="nav-notify"><i class="fi fi-ss-bell"></i></div>
+                    <div class="nav-prf-pic"><img src="logout.png" style="width: 10vw; border-radius: 50%; "onclick="logout()" alt=""></div>
+                </div>
+            </div>
+            </div>
+        </div>
+        <div class="container">
+              <div class="Welcome-box">
+                <div id="welcome-text">  
+                    <div id="before-login">            
+                        <div id="time-date">
+                            <div id="mob-greet"></div>
+                            <div id="time"></div>
+                            <div id="date"></div>
+                        </div>
+                        <div id="mob-cmpy-logo" onclick="toggleAdminControl()">
+                            <img src="compny-banner.png" width="100px" alt="">
+                        </div>
+                        <div id="welcome-message">
+                            <p>Welcome to </p>
+                            <h1 id="company-name"></h1>
+                        </div>
+                    </div>
+                    <div id="afterlogin">
+                        <div class="afterlogin-container">
+                            <div class="afterlogin-container-box">
+                                <img src="prfl-pic.jpeg" alt="">
+                            </div>
+                            <div class="afterlogin-container-box">
+                                <div id="loginaftrtime"></div>
+                                <div class="skill-box" style="display: none;">
+                                    <span class="score-target-mini-display">
+                                        <p class="crnt-scr-dspl">89374</p>
+                                        <p class="target-mini-display">100000</p>
+                                    </span>
+                                    <div class="skill-bar">
+                                        <span class="skill-per html">
+                                            <span class="tooltip">90%</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="afterlogin-container-box">
+                                <div class="aftrlgndate">
+                                    <div class="myrstyl" id="currentmonth"></div>
+                                    <div id="crntdate"></div>
+                                    <div class="myrstyl" id="crntyr"></div>
+                                </div>
+                                <div class="prg-cont" style="display: none;">
+                                    <svg class="circular-progress" style="--progress: 0">
+                                        <circle class="bg"></circle>
+                                        <circle class="fg"></circle>
+                                    </svg>
+                                    <div class="percentage">0%<span>Attandance</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="afterlogin-container">
+                            
+                            <div id="atnst">S</div>
+                            <div class="usrdtl">
+                            <div class="emycodenbg">
+                                <span id="emcd">TFC12</span>
+                                <span id="embg">B+</span>
+                            </div>
+                            <div id="emcntno">8882558932</div>
+                        </div>
+                    </div>
+                        <div class="afterlogin-container" style="display: none;"></div>
+                    </div>
+                </div>
+             <div class="attandance-part">
+            <div class="text-coloum">
+                
+                <div id="message">
+                    <div class="video-image-box">
+                        <div id="video-container" style="display: none;" >
+                            <div id="img-msg-video">
+                            <img src="camera.gif" alt="" style="width: 100px;">
+                            <p>Maintain: Full Face Visibility. Proper Lighting. Clear Image. Unobstructed Face.</p>
+                            </div>
+                            <video id="video" autoplay></video>
+                            <canvas id="canvas" style="display:none;"></canvas>
+                            <img id="snapshot" style="display:none;">
+                        </div>
+                        <a id="download-link" download="snapshot.png" style="display:none;"></a>
+                    <img id="selfi-img" src="selfi-pic.gif" alt="camera" style="display: block;">
+                    </div>
+                    <div class="para">
+                        <div class="text-p"></div> 
+                    </div>
+                </div>
+            </div>
+
+            <div id="controls">
+                <div class="user-id dropdown-container">
+                    <input list="user-id-options" class="input-coloum" id="user-id" name="user-id" placeholder="Select User" autocomplete="off">
+                    <input list="user-id-options" style="display: none;" class="input-coloum" id="password-input" name="user-id" placeholder="Enter Password" autocomplete="off">
+                    <input list="user-id-options" class="input-coloum" id="security-code" name="security-code" placeholder="Security Code" autocomplete="off" style="display:none">
+                    
+                </div>
+                
+                <div class="buttons">
+                    <button id="forgot-login-password" onclick="toggleSecurityCode()" style="display: none;">FORGOT</button>
+                    <button id="login" style="display: block;">LOGIN</button>
+                    <button id="punchin" style="display:none;">PUNCH</button>
+                    <button id="checkin" style="display:none;" >Check In</button>
+                    <button id="checkout" style="display:none; background-color: #ff4242;">Check Out</button>
+                </div>
+            </div>
+        
+              </div>
+        </div>
+        </div>
+        <div id="user-dropdown"></div>
+        <div id="admin-control">
+          
+        
+        </div>
+    
+</div>
+    <script src="script.js" defer></script>
+
+</body>
+</html>
