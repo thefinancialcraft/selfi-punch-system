@@ -30,7 +30,7 @@ body::-webkit-scrollbar {
     display: none;
 }
 .eror{
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
