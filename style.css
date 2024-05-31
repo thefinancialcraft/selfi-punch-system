@@ -100,7 +100,7 @@ body::-webkit-scrollbar {
 .attandnace-system{
     display: none;}
 
-@media (max-width: 500px){
+@media (max-width: 600px){
     
 body {
     width: 100vw;
@@ -862,8 +862,7 @@ body {
 
 
     }
-    .eror{
-    display: none;
+   
     button{
  
         height: 13vw;
