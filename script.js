@@ -298,10 +298,9 @@ document.getElementById('checkin').addEventListener('click', function() {
     })
     .then(response => response.text())
     .then(link => {
-        console.log('Image saved to Google Drive. Link: ', link);
+       console.log('Attendance recorded. Click OK to update on WhatsApp. Have a great day!');
         // Display or use the link as needed
-        alert('Image saved to Google Drive. Link: ' + link);
-
+        alert('Attendance recorded. Click OK to update on WhatsApp. Have a great day! ');
         // Get the input value
         var userId = document.getElementById('user-id').value;
 
