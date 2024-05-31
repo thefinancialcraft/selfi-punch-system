@@ -317,7 +317,7 @@ document.getElementById('checkin').addEventListener('click', function() {
         var whatsappUrl = 'https://wa.me/?text=' + encodedMessage;
 
         // Open the WhatsApp URL in a new tab
-        window.open(whatsappUrl, '_blank');
+         window.location.href = whatsappUrl;
     })
     .catch(error => {
         console.error('Error saving image to Google Drive: ', error);
