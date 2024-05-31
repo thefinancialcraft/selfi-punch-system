@@ -117,36 +117,55 @@ function displayGreeting() {
   updateDat();
   setInterval(updateDate, 1000);
   
-   const texts = ['Signin to Your Account', 'Mark Your Attendance'];
-          let index = 0;
-          const textElement = document.querySelector('.text-p');
+  let texts = ['Signin to Your Account', 'Mark Your Attendance'];
+  let index = 0;
+  const textElement = document.querySelector('.text-p');
   
-          function changeText() {
-              textElement.textContent = texts[index];
-              index = (index + 1) % texts.length;
-          }
+  function changeText() {
+      textElement.textContent = texts[index];
+      index = (index + 1) % texts.length;
+  }
   
-          function animateText() {
-              textElement.style.animation = 'none'; // Reset animation
-              setTimeout(() => {
-                  textElement.style.animation = 'zoomInOut 2s ease-in-out infinite alternate';
-                  changeText();
-                  animateText();
-              }, 2000); // Change the delay (in milliseconds) here
-          }
+  function animateText() {
+      textElement.style.animation = 'none'; // Reset animation
+      setTimeout(() => {
+          textElement.style.animation = 'zoomInOut 2s ease-in-out infinite alternate';
+          changeText();
+      }, 2000); // Change the delay (in milliseconds) here
+  }
   
-          animateText();
+  function updateTexts(newTexts) {
+      texts = newTexts;
+      index = 0; // Reset index
+      animateText();
+  }
+  
+  // Initial animation
+  animateText();
+  
+  // Example functions to update texts
+  function login() {
+      updateTexts(['Hit Punch-In Button', 'Mark Your Attendance']);
+  }
+  
+  function punchin() {
+      updateTexts(['Click Check-In Button', 'Say Cheese']);
+  }
+  
+  function checkin() {
+      updateTexts(['Attendance Successfully Marked', 'Let\'s set the floor on fire']);
+  }
+  
+  // Call these functions based on your triggers
+  // login();
+  // punchin();
+  // checkin();
   
   
   
         
   
-  
-         // Function to handle login button click event
-
-
-
-        
+          
         let rotateInterval;
         let totalRotation = 0; // total rotation angle
         let rotations = 0; // number of rotations
@@ -208,7 +227,8 @@ function displayGreeting() {
         document.querySelector('.prg-cont').addEventListener('mouseleave', () => clearInterval(rotateInterval));
 
   //camera part
-document.getElementById('punchin').addEventListener('click', function() {
+  
+  document.getElementById('punchin').addEventListener('click', function() {
     var startButton = document.getElementById('punchin');
     startButton.style.display = 'none';
     document.getElementById("img-msg-video").style.display = "none";
@@ -230,49 +250,83 @@ document.getElementById('punchin').addEventListener('click', function() {
         });
     }
 });
+
 document.getElementById('checkin').addEventListener('click', function() {
-  var video = document.getElementById('video');
-  var canvas = document.getElementById('canvas');
-  var ctx = canvas.getContext('2d');
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
+    var video = document.getElementById('video');
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
 
-  // Start drawing the watermark in real-time
-  function drawWatermark() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear previous frame
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    // Start drawing the watermark in real-time
+    function drawWatermark() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear previous frame
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-      // Add real-time date and time watermark
-      var text = new Date().toLocaleString();
-      ctx.font  = '10vw Arial'; // Set font size to 3vw
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-      var textWidth = ctx.measureText(text).width;
-      ctx.fillText(text, (canvas.width - textWidth) / 2, canvas.height / 2);
+        // Add real-time date and time watermark
+        var text = new Date().toLocaleString();
+        ctx.font = '10vw Arial'; // Set font size to 10vw
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+        var textWidth = ctx.measureText(text).width;
+        ctx.fillText(text, (canvas.width - textWidth) / 2, canvas.height / 2);
 
-      requestAnimationFrame(drawWatermark); // Request next frame
-  }
+        requestAnimationFrame(drawWatermark); // Request next frame
+    }
 
-  drawWatermark(); // Start the drawing loop
+    drawWatermark(); // Start the drawing loop
 
-  var snapshot = document.getElementById('snapshot');
-  snapshot.src = canvas.toDataURL('image/png');
-  snapshot.style.display = 'block';
-  video.style.display = 'none';
-  video.srcObject.getVideoTracks().forEach(track => track.stop());
+    var snapshot = document.getElementById('snapshot');
+    snapshot.src = canvas.toDataURL('image/png');
+    snapshot.style.display = 'block';
+    video.style.display = 'none';
+    video.srcObject.getVideoTracks().forEach(track => track.stop());
 
-  // Hide the "Punch" button
-  document.getElementById('checkin').style.display = 'none';
-  document.getElementById("checkout").style.display = "block";
+    // Hide the "Punch" button
+    document.getElementById('checkin').style.display = 'none';
+    document.getElementById("checkout").style.display = "block";
 
-  // Create a download link and trigger the download
-  var downloadLink = document.getElementById('download-link');
-  downloadLink.href = canvas.toDataURL('image/png');
-  downloadLink.click();
+    // Send the snapshot to Google Apps Script
+    var imageData = canvas.toDataURL('image/png').split(',')[1];
+    var url = 'https://script.google.com/macros/s/AKfycbybl4NZgmklOQuGjksF9cLAwhzt3gAOQHlUKQ1mYTfKoFpvc4lSgqRd9gbRWpcv--cz/exec'; // Replace with your Google Apps Script URL
 
-  // Remove event listener after taking snapshot
-  document.getElementById('checkin').removeEventListener('click', arguments.callee);
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'imageData=' + encodeURIComponent(imageData)
+    })
+    .then(response => response.text())
+    .then(link => {
+        console.log('Image saved to Google Drive. Link: ', link);
+        // Display or use the link as needed
+        alert('Image saved to Google Drive. Link: ' + link);
 
+        // Get the input value
+        var userId = document.getElementById('user-id').value;
+
+        // Get the current timestamp
+        var timestamp = new Date().toLocaleString();
+
+        // Create the WhatsApp message
+        var message = '*Reached*, ' + userId + ', ' + timestamp + '\nGoogle Drive Link: ' + link;
+
+        // Encode the message for the URL
+        var encodedMessage = encodeURIComponent(message);
+
+        // Create the WhatsApp URL
+        var whatsappUrl = 'https://wa.me/?text=' + encodedMessage;
+
+        // Open the WhatsApp URL in a new tab
+        window.open(whatsappUrl, '_blank');
+    })
+    .catch(error => {
+        console.error('Error saving image to Google Drive: ', error);
+    });
 });
+
+
+
 
 function updateTime() {
   const now = new Date();
@@ -344,22 +398,48 @@ function updateYear() {
 
 updateYear(); // initial call to display the year immediately punchin
 
+//login funtion
 
-document.getElementById("login").addEventListener("click", function() {
-  document.querySelector(".login-nav").style.display = "none";
-  document.querySelector(".login-nav-after").style.display = "flex";
-  document.getElementById("login").style.display = "none";
-  document.getElementById("before-login").style.display = "none";
-  document.getElementById("afterlogin").style.display = "flex";
-  document.getElementById("video-container").style.display = "flex";
-  document.getElementById("message").style.backgroundColor = "rgb(0 153 255)";
-  document.getElementById("selfi-img").style.display = "none";
-  document.getElementById("user-id").setAttribute("readonly", true);
-  document.querySelector(".text-p").style.color = "#fff";
-  document.getElementById("punchin").style.display = "block";
-  document.getElementById("user-dropdown").style.display = "none";
+document.getElementById("login").addEventListener("click", async function() {
+  const userId = document.getElementById('user-id').value;
+  if (!userId) {
+    alert('Please enter a User ID');
+    return;
+  }
 
+  try {
+    const response = await fetch('data.json');
+    const data = await response.json();
+
+    const user = data.find(user => user['User Name'] === userId);
+
+    if (user) {
+      document.querySelector('.user-name-nav').textContent = user['User Name'];
+      document.getElementById('emcd').textContent = user['Emp. Code'];
+      document.getElementById('embg').textContent = user['Blood Grp'];
+      document.getElementById('emcntno').textContent = user['Contact No.'];
+
+      // Visual transitions
+      document.querySelector(".login-nav").style.display = "none";
+      document.querySelector(".login-nav-after").style.display = "flex";
+      document.getElementById("login").style.display = "none";
+      document.getElementById("before-login").style.display = "none";
+      document.getElementById("afterlogin").style.display = "flex";
+      document.getElementById("video-container").style.display = "flex";
+      document.getElementById("message").style.backgroundColor = "rgb(0 153 255)";
+      document.getElementById("selfi-img").style.display = "none";
+      document.getElementById("user-id").setAttribute("readonly", true);
+      document.getElementById("punchin").style.display = "block";
+    } else {
+      alert('User not found');
+    }
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
 });
+
+
+// logout funtion
 
 function logout(){
   document.querySelector(".login-nav").style.display = "flex";
@@ -367,7 +447,10 @@ function logout(){
   document.getElementById("login").style.display = "block";
   document.getElementById("before-login").style.display = "flex";
   document.getElementById("afterlogin").style.display = "none";
-  document.getElementById("user-id").removeAttribute("readonly");
+  var userIdInput = document.getElementById("user-id");
+  userIdInput.removeAttribute("readonly");
+  userIdInput.value = ""; // Isse input field ka value clear ho jayega
+  
   document.getElementById("video-container").style.display = "none";
   document.getElementById("selfi-img").style.display = "block";
   document.getElementById("message").style.backgroundColor = "#fff";
@@ -375,13 +458,15 @@ function logout(){
   document.getElementById("punchin").style.display = "none";
   document.getElementById("checkin").style.display = "none";
   video.srcObject.getVideoTracks().forEach(track => track.stop());
-  document.querySelector(".text-p").style.color = "#000000";
-  document.getElementById("user-dropdown").style.display = "absolute";
+
+
   
 
-  location.reload();
+  window.location.reload();
 
 }
+
+//dropdown
 const userIdInput = document.getElementById('user-id');
 const userDropdown = document.getElementById('user-dropdown');
 let selectedIndex = -1;
@@ -391,22 +476,25 @@ userIdInput.addEventListener('input', async function() {
   if (!userInput) {
     userDropdown.innerHTML = '';
     userDropdown.classList.remove('show');
+    selectedIndex = -1;
     return;
   }
 
   try {
     const response = await fetch('data.json');
     const data = await response.json();
-    const filteredUsers = data.filter(user => user['User Name'].toLowerCase().includes(userInput)).slice(0, 3);
+    const filteredUsers = data.filter(user => user['User Name'].toLowerCase().includes(userInput));
 
     if (filteredUsers.length > 0) {
       const dropdownContent = filteredUsers.map((user, index) => `<div class="user-item ${selectedIndex === index ? 'selected' : ''}">${user['User Name']}</div>`).join('');
       userDropdown.innerHTML = dropdownContent;
       userDropdown.classList.add('show');
-      selectedIndex = -1;
+      selectedIndex = filteredUsers.length - 1; // Start from the last item
+      updateSelectedUser(document.querySelectorAll('.user-item'));
     } else {
       userDropdown.innerHTML = '<div>No matching users found.</div>';
       userDropdown.classList.remove('show');
+      selectedIndex = -1;
     }
   } catch (error) {
     console.error('Error fetching or parsing data:', error);
@@ -425,11 +513,11 @@ userIdInput.addEventListener('keydown', function(event) {
 
   if (event.key === 'ArrowDown') {
     event.preventDefault();
-    selectedIndex = Math.min(selectedIndex + 1, userItems.length - 1);
+    selectedIndex = Math.min(selectedIndex + 1, userItems.length - 1); // Move down the list
     updateSelectedUser(userItems);
   } else if (event.key === 'ArrowUp') {
     event.preventDefault();
-    selectedIndex = Math.max(selectedIndex - 1, 0);
+    selectedIndex = Math.max(selectedIndex - 1, 0); // Move up the list
     updateSelectedUser(userItems);
   } else if (event.key === 'Enter' && selectedIndex >= 0) {
     userIdInput.value = userItems[selectedIndex].textContent;
@@ -455,48 +543,4 @@ document.addEventListener('click', function(event) {
   }
 });
 
-async function login() {
-  const userId = document.getElementById('user-id').value;
-  const errorMessage = document.getElementById('error-message');
 
-  if (!userId) {
-      errorMessage.textContent = 'Please enter a user ID';
-      return;
-  }
-
-  try {
-      const data = await fetchData();
-      const userExists = data.some(user => user['users name'] === userId);
-
-      if (userExists) {
-          errorMessage.textContent = '';
-          // Proceed with login function
-          console.log('Login successful');
-      } else {
-          errorMessage.textContent = 'User not found';
-      }
-  } catch (error) {
-      errorMessage.textContent = 'An error occurred while fetching data';
-      console.error('Error:', error);
-  }
-}
-
-document.getElementById('checkin').addEventListener('click', function() {
-  // Get the input value
-  var userId = document.getElementById('user-id').value;
-
-  // Get the current timestamp
-  var timestamp = new Date().toLocaleString();
-
-  // Create the WhatsApp message
-  var message = '*Reached*, ' + userId + ', ' + timestamp;
-
-  // Encode the message for the URL
-  var encodedMessage = encodeURIComponent(message);
-
-  // Create the WhatsApp URL
-  var whatsappUrl = 'https://wa.me/?text=' + encodedMessage;
-
-  // Open the WhatsApp URL in a new tab
-  window.open(whatsappUrl, '_blank');
-});
