@@ -23,7 +23,7 @@
                 <div class="login-nav" style="display: flex;">Login Account</div>
                <div class="login-nav-after" style="display: none;">
                 <div class="user-nav-text">
-                    <div class="user-greet-nav"><p>Good Eveining</p></div>
+                    <div class="user-greet-nav"><p>Good Morning</p></div>
                     <div class="user-name-nav"><p>User Name</p></div>
                 </div>
                 <div class="user-nav-action">
@@ -52,8 +52,9 @@
                     </div>
                     <div id="afterlogin">
                         <div class="afterlogin-container">
-                            <div class="afterlogin-container-box">
-                                <img src="prfl-pic.jpeg" alt="">
+                            <div class="afterlogin-container-box " >
+                                <img id="afterlgnpc" src="user (1).png" style="padding: 2vw;"" alt="">
+
                             </div>
                             <div class="afterlogin-container-box">
                                 <div id="loginaftrtime"></div>
@@ -116,13 +117,14 @@
                     <img id="selfi-img" src="selfi-pic.gif" alt="camera" style="display: block;">
                     </div>
                     <div class="para">
-                        <div class="text-p"></div> 
+                        <div class="text-p"></div>
                     </div>
                 </div>
             </div>
 
             <div id="controls">
                 <div class="user-id dropdown-container">
+                    <div id="user-dropdown"></div>
                     <input list="user-id-options" class="input-coloum" id="user-id" name="user-id" placeholder="Select User" autocomplete="off">
                     <input list="user-id-options" style="display: none;" class="input-coloum" id="password-input" name="user-id" placeholder="Enter Password" autocomplete="off">
                     <input list="user-id-options" class="input-coloum" id="security-code" name="security-code" placeholder="Security Code" autocomplete="off" style="display:none">
@@ -131,9 +133,9 @@
                 
                 <div class="buttons">
                     <button id="forgot-login-password" onclick="toggleSecurityCode()" style="display: none;">FORGOT</button>
-                    <button id="login" style="display: block;">LOGIN</button>
-                    <button id="punchin" style="display:none;">PUNCH</button>
-                    <button id="checkin" style="display:none;" >Check In</button>
+                    <button id="login" onclick="login()" style="display: block;">LOGIN</button>
+                    <button id="punchin" onclick="punchin()" style="display:none;">PUNCH</button>
+                    <button id="checkin" onclick="checkin()" style="display:none;" >Check In</button>
                     <button id="checkout" style="display:none; background-color: #ff4242;">Check Out</button>
                 </div>
             </div>
@@ -141,7 +143,7 @@
               </div>
         </div>
         </div>
-        <div id="user-dropdown"></div>
+        
         <div id="admin-control">
           
         
