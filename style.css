@@ -100,8 +100,6 @@ body::-webkit-scrollbar {
 }
 .attandnace-system{
     display: none;}
-
-@media (max-width: 1600px){
     
 body {
     width: 100vw;
@@ -830,10 +828,6 @@ body {
 #checkin{
     background-color: #2ec4b6;
 }
-   
-
-}
-@media (min-height: 850px){
 
     
     .attandance-part{
@@ -870,5 +864,5 @@ body {
     }
 
 
-}
+
 
