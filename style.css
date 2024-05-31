@@ -100,7 +100,7 @@ body::-webkit-scrollbar {
 .attandnace-system{
     display: none;}
 
-@media (max-width: 600px){
+@media (max-width: 700px){
     
 body {
     width: 100vw;
@@ -832,7 +832,7 @@ body {
    
 
 }
-@media (min-height: 850px){
+@media (min-height: 750px){
 
     
     .attandance-part{
@@ -862,7 +862,6 @@ body {
 
 
     }
-   
     button{
  
         height: 13vw;
@@ -871,5 +870,4 @@ body {
 
 
 }
-
 
