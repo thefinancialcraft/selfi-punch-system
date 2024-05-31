@@ -300,7 +300,7 @@ document.getElementById('checkin').addEventListener('click', function() {
     .then(link => {
         console.log('. Link: ', link);
         // Display or use the link as needed
-        alert('Your attendance has been successfully recorded. Please click 'OK' to update your status on WhatsApp. Have a wonderful day!');
+        alert('Image saved to Google Drive. Link: ', link);
 
         // Get the input value
         var userId = document.getElementById('user-id').value;
