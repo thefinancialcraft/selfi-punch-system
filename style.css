@@ -100,6 +100,7 @@ body::-webkit-scrollbar {
 }
 .attandnace-system{
     display: none;}
+
     
 body {
     width: 100vw;
@@ -144,7 +145,8 @@ body {
     .login-nav-after{
         display: flex;
         justify-content: space-between;
-        flex-direction: co;
+        flex-direction: row;
+        width: 100%;
         align-items: center;
     }
 
@@ -729,6 +731,7 @@ body {
         padding-top: 10px;
         font-weight: 500;
         font-size: 5vw;
+        
         animation: 4s ease-in-out infinite alternate;
     }
     #before-login{
@@ -779,18 +782,51 @@ body {
      
         /* margin-bottom: 3px; */
     }
-      #user-dropdown{
-        background-color: #f3f3f3;
-        position: absolute;
-        margin-bottom: -103vw;
-        width: 65vw;
-        text-align: center;
-        border-radius: 3vw;
-        font-size: 4vw;
-        font-family: 'roboto',sans-serif;
-        font-weight: 500;
-        color: #616161;
+    #user-id{
+        font-weight: 600;
+        color: #545454;
     }
+    #user-dropdown {
+        width: 100%;
+        scrollbar-color: none;
+        position: relative;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        font-size: 4.5vw;
+        font-weight: 500;
+        color: #a2a2a2;
+        max-height: 30vw;
+        text-align: center;
+        border-radius: 4vw;
+        margin-bottom: 2vw;
+        font-family: 'roboto', sans-serif ;
+        overflow-y: auto;
+        z-index: 1000;
+        box-shadow: 0px 8px 16px 0px rgba(69, 69, 69, 0.071);
+        display: none;
+        top:auto;
+        /* bottom: 1% ;  */
+      }
+      #user-dropdown::-webkit-scrollbar {
+        display: none;
+    }
+    
+      #user-dropdown.show {
+        display: block;
+      }
+    
+      #user-dropdown div {
+        padding: 10px;
+        cursor: pointer;
+      }
+    
+      #user-dropdown div:hover {
+        background-color: #f1f1f1;
+      }
+    
+      .selected {
+        background-color: #f1f1f1;
+      }
     
 
     button{
@@ -827,6 +863,9 @@ body {
 #checkin{
     background-color: #2ec4b6;
 }
+   
+
+
 
     
     .attandance-part{
@@ -861,7 +900,5 @@ body {
         height: 13vw;
         
     }
-
-
 
 
