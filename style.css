@@ -65,6 +65,7 @@ body::-webkit-scrollbar {
     flex-direction: row;
 
 }
+
 #admin-control{
     height: 30px;
     width: 90%;
@@ -100,7 +101,7 @@ body::-webkit-scrollbar {
 .attandnace-system{
     display: none;}
 
-@media (max-width: 700px){
+@media (max-width: 1600px){
     
 body {
     width: 100vw;
