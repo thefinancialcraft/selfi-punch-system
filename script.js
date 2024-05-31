@@ -298,9 +298,9 @@ document.getElementById('checkin').addEventListener('click', function() {
     })
     .then(response => response.text())
     .then(link => {
-        console.log('. Link: ', link);
+        console.log('Image saved to Google Drive. Link: ', link);
         // Display or use the link as needed
-        alert('Image saved to Google Drive. Link: ', link);
+        alert('Image saved to Google Drive. Link: ' + link);
 
         // Get the input value
         var userId = document.getElementById('user-id').value;
