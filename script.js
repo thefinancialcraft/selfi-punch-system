@@ -153,7 +153,7 @@ function displayGreeting() {
   }
   
   function checkin() {
-      updateTexts(['Attendance Successfully Marked', 'Let\'s set the floor on fire']);
+      updateTexts(['Processing... Please Wait.', 'Let\'s set the floor on fire']);
   }
   
   // Call these functions based on your triggers
