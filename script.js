@@ -237,6 +237,7 @@ function displayGreeting() {
     var videoContainer = document.getElementById('video-container');
     videoContainer.style.display = 'block';
     document.getElementById('checkin').style.display = 'block';
+    
     var video = document.getElementById('video');
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
@@ -264,11 +265,11 @@ document.getElementById('checkin').addEventListener('click', function() {
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
         // Add real-time date and time watermark
-        var text = new Date().toLocaleString();
+        var timestamp = new Date().toLocaleString(); // Get the current timestamp
         ctx.font = '10vw Arial'; // Set font size to 10vw
         ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-        var textWidth = ctx.measureText(text).width;
-        ctx.fillText(text, (canvas.width - textWidth) / 2, canvas.height / 2);
+        var textWidth = ctx.measureText(timestamp).width;
+        ctx.fillText(timestamp, (canvas.width - textWidth) / 2, canvas.height / 2);
 
         requestAnimationFrame(drawWatermark); // Request next frame
     }
@@ -298,17 +299,15 @@ document.getElementById('checkin').addEventListener('click', function() {
     })
     .then(response => response.text())
     .then(link => {
-       console.log('Attendance recorded. Click OK to update on WhatsApp. Have a great day!');
+        console.log('Attendance recorded. Click OK to update on WhatsApp. Have a great day!');
         // Display or use the link as needed
         alert('Attendance recorded. Click OK to update on WhatsApp. Have a great day! ');
+
         // Get the input value
         var userId = document.getElementById('user-id').value;
 
-        // Get the current timestamp
-        var timestamp = new Date().toLocaleString();
-
         // Create the WhatsApp message
-        var message = '*Reached*, ' + userId + ', ' + timestamp + '\nGoogle Drive Link: ' + link;
+        var message = '*Reached*, ' + userId + ', ' + new Date().toLocaleString() + '\nGoogle Drive Link: ' + link;
 
         // Encode the message for the URL
         var encodedMessage = encodeURIComponent(message);
@@ -316,14 +315,13 @@ document.getElementById('checkin').addEventListener('click', function() {
         // Create the WhatsApp URL
         var whatsappUrl = 'https://wa.me/?text=' + encodedMessage;
 
-        // Open the WhatsApp URL in a new tab
-         window.location.href = whatsappUrl;
+        // Redirect to the WhatsApp URL
+        window.location.href = whatsappUrl;
     })
     .catch(error => {
         console.error('Error saving image to Google Drive: ', error);
     });
 });
-
 
 
 
