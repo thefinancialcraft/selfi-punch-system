@@ -228,7 +228,7 @@ function displayGreeting() {
 
   //camera part
   
-  document.getElementById('punchin').addEventListener('click', function() {
+ document.getElementById('punchin').addEventListener('click', function() {
     var startButton = document.getElementById('punchin');
     startButton.style.display = 'none';
     document.getElementById("img-msg-video").style.display = "none";
@@ -265,7 +265,7 @@ document.getElementById('checkin').addEventListener('click', function() {
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
         // Add real-time date and time watermark
-        var timestamp = new Date().toLocaleString(); // Get the current timestamp
+        var timestamp = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }); // Get the current timestamp in hh:mm am/pm format
         ctx.font = '10vw Arial'; // Set font size to 10vw
         ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
         var textWidth = ctx.measureText(timestamp).width;
@@ -307,7 +307,8 @@ document.getElementById('checkin').addEventListener('click', function() {
         var userId = document.getElementById('user-id').value;
 
         // Create the WhatsApp message
-        var message = '*Reached*, ' + userId + ', ' + new Date().toLocaleString() + '\nGoogle Drive Link: ' + link;
+        var timestamp = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }); // Ensure timestamp matches the recorded time
+        var message = '*Reached*, ' + userId + ', ' + timestamp + '\nGoogle Drive Link: ' + link;
 
         // Encode the message for the URL
         var encodedMessage = encodeURIComponent(message);
@@ -322,7 +323,6 @@ document.getElementById('checkin').addEventListener('click', function() {
         console.error('Error saving image to Google Drive: ', error);
     });
 });
-
 
 
 function updateTime() {
