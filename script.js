@@ -260,7 +260,11 @@ document.getElementById('checkin').addEventListener('click', function() {
     canvas.height = video.videoHeight;
 
     var now = new Date();
-    var timestamp = now.toLocaleDateString('en-US') + ' ' + now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }); // Get the current date and timestamp in MM/DD/YYYY hh:mm:ss am/pm format
+    var formattedDate = now.getDate().toString().padStart(2, '0') + '/' +
+                        (now.getMonth() + 1).toString().padStart(2, '0') + '/' +
+                        now.getFullYear();
+    var formattedTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+    var timestamp = formattedDate + ' ' + formattedTime; // Get the current date and timestamp in DD/MM/YYYY hh:mm:ss am/pm format
 
     // Start drawing the watermark in real-time
     function drawWatermark() {
