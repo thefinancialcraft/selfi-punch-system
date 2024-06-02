@@ -229,7 +229,7 @@ function displayGreeting() {
 
   //camera part
   
- document.getElementById('punchin').addEventListener('click', function() {
+  document.getElementById('punchin').addEventListener('click', function() {
     var startButton = document.getElementById('punchin');
     startButton.style.display = 'none';
     document.getElementById("img-msg-video").style.display = "none";
@@ -244,15 +244,9 @@ function displayGreeting() {
         navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
             video.srcObject = stream;
             video.play();
-
-            // Adjust the container to have equal width and height
-            var containerSize = Math.min(videoContainer.clientWidth, videoContainer.clientHeight);
-            videoContainer.style.width = containerSize + 'px';
-            videoContainer.style.height = containerSize + 'px';
-            
-            // Adjust the video dimensions to fit within the container while maintaining the 1:1 aspect ratio
-            video.width = containerSize;
-            video.height = containerSize;
+            // Match the size of the video stream to the video container
+            video.width = videoContainer.clientWidth;
+            video.height = videoContainer.clientHeight;
         }).catch(function(error) {
             console.log("Error accessing webcam: ", error);
         });
