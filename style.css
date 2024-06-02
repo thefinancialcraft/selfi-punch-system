@@ -653,6 +653,8 @@ body {
         flex-direction: column;
         background-color: #ffffff;
         margin: 0;
+        padding-bottom: 100%; /* Maintain a 1:1 aspect ratio */
+        position: relative;
         
         /* background-color: #ffffff; */
     }
@@ -678,6 +680,11 @@ body {
         background-color: #ffffff;
         height: 100%;
         border-radius: 4vw;
+         position: absolute;
+         top: 0;
+         left: 0;
+         object-fit: cover; /* Ensure the video covers the container */
+        
     }
     
    
