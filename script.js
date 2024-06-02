@@ -229,7 +229,7 @@ function displayGreeting() {
 
   //camera part
   
- document.getElementById('punchin').addEventListener('click', function() {
+    document.getElementById('punchin').addEventListener('click', function() {
       var startButton = document.getElementById('punchin');
       startButton.style.display = 'none';
       document.getElementById("img-msg-video").style.display = "none";
@@ -254,11 +254,13 @@ function displayGreeting() {
       var video = document.getElementById('video');
       var canvas = document.getElementById('canvas');
       var ctx = canvas.getContext('2d');
-      
-      // Set canvas size to match the video-container size
+
       var videoContainer = document.getElementById('video-container');
-      canvas.width = videoContainer.clientWidth;
-      canvas.height = videoContainer.clientHeight;
+      var containerWidth = videoContainer.clientWidth;
+      var containerHeight = videoContainer.clientHeight;
+
+      canvas.width = containerWidth;
+      canvas.height = containerHeight;
 
       var now = new Date();
       var formattedDate = now.getDate().toString().padStart(2, '0') + '/' +
@@ -286,8 +288,6 @@ function displayGreeting() {
       var snapshot = document.getElementById('snapshot');
       snapshot.src = canvas.toDataURL('image/png');
       snapshot.style.display = 'block';
-      snapshot.style.width = videoContainer.clientWidth + 'px'; // Set snapshot size to match video-container
-      snapshot.style.height = videoContainer.clientHeight + 'px'; // Set snapshot size to match video-container
       video.style.display = 'none';
       video.srcObject.getVideoTracks().forEach(track => track.stop());
 
@@ -333,7 +333,6 @@ function displayGreeting() {
           console.error('Error saving image to Google Drive: ', error);
       });
     });
-
 
 function updateTime() {
   const now = new Date();
