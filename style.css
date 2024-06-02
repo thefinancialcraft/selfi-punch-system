@@ -680,10 +680,10 @@ body {
         background-color: #ffffff;
         height: 100%;
         border-radius: 4vw;
-         position: absolute;
-         top: 0;
-         left: 0;
-         object-fit: cover; /* Ensure the video covers the container */
+        position: absolute;
+        top: 0;
+        left: 0;
+        object-fit: cover; /* Ensure the video covers the container */
         
     }
     
