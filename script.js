@@ -229,7 +229,7 @@ function displayGreeting() {
 
   //camera part
   
-  document.getElementById('punchin').addEventListener('click', function() {
+ document.getElementById('punchin').addEventListener('click', function() {
     var startButton = document.getElementById('punchin');
     startButton.style.display = 'none';
     document.getElementById("img-msg-video").style.display = "none";
@@ -240,6 +240,9 @@ function displayGreeting() {
     document.getElementById('checkin').style.display = 'block';
     
     var video = document.getElementById('video');
+    video.style.width = '85vw';
+    video.style.height = '65vw';
+
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
             video.srcObject = stream;
