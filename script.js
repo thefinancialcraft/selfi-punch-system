@@ -267,7 +267,12 @@ document.getElementById('checkin').addEventListener('click', function() {
     // Start drawing the watermark in real-time
     function drawWatermark() {
         ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear previous frame
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        
+        // Flip the video horizontally by scaling context negatively
+        ctx.save();
+        ctx.scale(-1, 1);
+        ctx.drawImage(video, -canvas.width, 0, canvas.width, canvas.height);
+        ctx.restore();
 
         // Add real-time date and time watermark
         ctx.font = '10vw Arial'; // Set font size to 10vw
