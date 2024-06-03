@@ -229,7 +229,7 @@ function displayGreeting() {
 
   //camera part
   
-       document.getElementById('punchin').addEventListener('click', function() {
+    document.getElementById('punchin').addEventListener('click', function() {
       var startButton = document.getElementById('punchin');
       startButton.style.display = 'none';
       document.getElementById("img-msg-video").style.display = "none";
@@ -269,24 +269,19 @@ function displayGreeting() {
       var formattedTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
       var timestamp = formattedDate + ' ' + formattedTime; // Get the current date and timestamp in DD/MM/YYYY hh:mm:ss am/pm format
 
-      // Start drawing the watermark in real-time
-      function drawWatermark() {
-          ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear previous frame
-          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      // Draw the video frame onto the canvas scaled to fit the container
+      ctx.drawImage(video, 0, 0, containerWidth, containerHeight);
 
-          // Add real-time date and time watermark
-          ctx.font = '5vw Arial'; // Set font size to 10vw
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-          var textWidth = ctx.measureText(timestamp).width;
-          ctx.fillText(timestamp, (canvas.width - textWidth) / 2, canvas.height / 2);
-
-          requestAnimationFrame(drawWatermark); // Request next frame
-      }
-
-      drawWatermark(); // Start the drawing loop
+      // Add date and time watermark
+      ctx.font = '20px Arial';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+      var textWidth = ctx.measureText(timestamp).width;
+      ctx.fillText(timestamp, containerWidth - textWidth - 10, containerHeight - 10);
 
       var snapshot = document.getElementById('snapshot');
       snapshot.src = canvas.toDataURL('image/png');
+      snapshot.style.width = containerWidth + 'px'; // Set snapshot width to video container width
+      snapshot.style.height = containerHeight + 'px'; // Set snapshot height to video container height
       snapshot.style.display = 'block';
       video.style.display = 'none';
       video.srcObject.getVideoTracks().forEach(track => track.stop());
