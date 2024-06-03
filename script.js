@@ -229,7 +229,7 @@ function displayGreeting() {
 
   //camera part
   
-    document.getElementById('punchin').addEventListener('click', function() {
+       document.getElementById('punchin').addEventListener('click', function() {
       var startButton = document.getElementById('punchin');
       startButton.style.display = 'none';
       document.getElementById("img-msg-video").style.display = "none";
@@ -275,7 +275,7 @@ function displayGreeting() {
           ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
           // Add real-time date and time watermark
-          ctx.font = '6vw Arial'; // Set font size to 10vw
+          ctx.font = '5vw Arial'; // Set font size to 10vw
           ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
           var textWidth = ctx.measureText(timestamp).width;
           ctx.fillText(timestamp, (canvas.width - textWidth) / 2, canvas.height / 2);
