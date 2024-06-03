@@ -229,105 +229,107 @@ function displayGreeting() {
 
   //camera part
   
-    document.getElementById('punchin').addEventListener('click', function() {
-      var startButton = document.getElementById('punchin');
-      startButton.style.display = 'none';
-      document.getElementById("img-msg-video").style.display = "none";
-      document.getElementById("video").style.display = "block";
-      
-      var videoContainer = document.getElementById('video-container');
-      videoContainer.style.display = 'block';
-      document.getElementById('checkin').style.display = 'block';
-      
-      var video = document.getElementById('video');
-      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-          navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
-              video.srcObject = stream;
-              video.play();
-          }).catch(function(error) {
-              console.log("Error accessing webcam: ", error);
-          });
-      }
+  document.getElementById('punchin').addEventListener('click', function() {
+    var startButton = document.getElementById('punchin');
+    startButton.style.display = 'none';
+    document.getElementById("img-msg-video").style.display = "none";
+    document.getElementById("video").style.display = "block";
+    
+    var videoContainer = document.getElementById('video-container');
+    videoContainer.style.display = 'block';
+    document.getElementById('checkin').style.display = 'block';
+    
+    var video = document.getElementById('video');
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+            video.srcObject = stream;
+            video.play();
+        }).catch(function(error) {
+            console.log("Error accessing webcam: ", error);
+        });
+    }
+});
+
+document.getElementById('checkin').addEventListener('click', function() {
+    var video = document.getElementById('video');
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    var now = new Date();
+    var formattedDate = now.getDate().toString().padStart(2, '0') + '/' +
+                        (now.getMonth() + 1).toString().padStart(2, '0') + '/' +
+                        now.getFullYear();
+    var formattedTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+    var timestamp = formattedDate + ' ' + formattedTime; // Get the current date and timestamp in DD/MM/YYYY hh:mm:ss am/pm format
+
+    // Start drawing the watermark in real-time
+    function drawWatermark() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear previous frame
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        // Add real-time date and time watermark
+        ctx.font = '10vw Arial'; // Set font size to 10vw
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+        var textWidth = ctx.measureText(timestamp).width;
+        ctx.fillText(timestamp, (canvas.width - textWidth) / 2, canvas.height / 2);
+
+        requestAnimationFrame(drawWatermark); // Request next frame
+    }
+
+    drawWatermark(); // Start the drawing loop
+
+    var snapshot = document.getElementById('snapshot');
+    snapshot.src = canvas.toDataURL('image/png');
+    snapshot.style.display = 'block';
+    video.style.display = 'none';
+    video.srcObject.getVideoTracks().forEach(track => track.stop());
+
+    // Hide the "Punch" button
+    document.getElementById('checkin').style.display = 'none';
+    document.getElementById("checkout").style.display = "block";
+
+    // Get the input value
+    var userId = document.getElementById('user-id').value;
+
+    // Send the snapshot and additional data to Google Apps Script
+    var imageData = canvas.toDataURL('image/png').split(',')[1];
+    var url = 'https://script.google.com/macros/s/AKfycbxVny2yS526pOjQDgjIpdkaGfT7GjGCqmkoIzsTFOeY5GTTt7zMzWezxMtWf3sTxISI/exec'; // Replace with your Google Apps Script URL
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'imageData=' + encodeURIComponent(imageData) + 
+              '&userId=' + encodeURIComponent(userId) + 
+              '&timestamp=' + encodeURIComponent(timestamp)
+    })
+    .then(response => response.text())
+    .then(link => {
+        console.log('Attendance recorded. Click OK to update on WhatsApp. Have a great day!');
+        // Display or use the link as needed
+        alert('Attendance recorded. Click OK to update on WhatsApp. Have a great day! ');
+
+        // Create the WhatsApp message
+        var message = '*Reached*, ' + userId + ', ' + timestamp + '\nGoogle Drive Link: ' + link;
+
+        // Encode the message for the URL
+        var encodedMessage = encodeURIComponent(message);
+
+        // Create the WhatsApp URL
+        var whatsappUrl = 'https://wa.me/?text=' + encodedMessage;
+
+        // Redirect to the WhatsApp URL
+        window.location.href = whatsappUrl;
+    })
+    .catch(error => {
+        console.error('Error saving image to Google Drive: ', error);
     });
+});
 
-    document.getElementById('checkin').addEventListener('click', function() {
-      var video = document.getElementById('video');
-      var canvas = document.getElementById('canvas');
-      var ctx = canvas.getContext('2d');
 
-      var videoContainer = document.getElementById('video-container');
-      var containerWidth = videoContainer.clientWidth;
-      var containerHeight = videoContainer.clientHeight;
-
-      canvas.width = containerWidth;
-      canvas.height = containerHeight;
-
-      var now = new Date();
-      var formattedDate = now.getDate().toString().padStart(2, '0') + '/' +
-                          (now.getMonth() + 1).toString().padStart(2, '0') + '/' +
-                          now.getFullYear();
-      var formattedTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
-      var timestamp = formattedDate + ' ' + formattedTime; // Get the current date and timestamp in DD/MM/YYYY hh:mm:ss am/pm format
-
-      // Draw the video frame onto the canvas scaled to fit the container
-      ctx.drawImage(video, 0, 0, containerWidth, containerHeight);
-
-      // Add date and time watermark
-      ctx.font = '5vw Arial';
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-      var textWidth = ctx.measureText(timestamp).width;
-      ctx.fillText(timestamp, containerWidth - textWidth - 10, containerHeight - 10);
-
-      var snapshot = document.getElementById('snapshot');
-      snapshot.src = canvas.toDataURL('image/png');
-      snapshot.style.width = containerWidth + 'vw'; // Set snapshot width to video container width
-      snapshot.style.height = containerHeight + 'vw'; // Set snapshot height to video container height
-      snapshot.style.display = 'block';
-      video.style.display = 'none';
-      video.srcObject.getVideoTracks().forEach(track => track.stop());
-
-      // Hide the "Punch" button
-      document.getElementById('checkin').style.display = 'none';
-      document.getElementById("checkout").style.display = "block";
-
-      // Get the input value
-      var userId = document.getElementById('user-id').value;
-
-      // Send the snapshot and additional data to Google Apps Script
-      var imageData = canvas.toDataURL('image/png').split(',')[1];
-      var url = 'https://script.google.com/macros/s/AKfycbxVny2yS526pOjQDgjIpdkaGfT7GjGCqmkoIzsTFOeY5GTTt7zMzWezxMtWf3sTxISI/exec'; // Replace with your Google Apps Script URL
-
-      fetch(url, {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: 'imageData=' + encodeURIComponent(imageData) + 
-                '&userId=' + encodeURIComponent(userId) + 
-                '&timestamp=' + encodeURIComponent(timestamp)
-      })
-      .then(response => response.text())
-      .then(link => {
-          console.log('Attendance recorded. Click OK to update on WhatsApp. Have a great day!');
-          // Display or use the link as needed
-          alert('Attendance recorded. Click OK to update on WhatsApp. Have a great day! ');
-
-          // Create the WhatsApp message
-          var message = '*Reached*, ' + userId + ', ' + timestamp + '\Link: ' + link;
-
-          // Encode the message for the URL
-          var encodedMessage = encodeURIComponent(message);
-
-          // Create the WhatsApp URL
-          var whatsappUrl = 'https://wa.me/?text=' + encodedMessage;
-
-          // Redirect to the WhatsApp URL
-          window.location.href = whatsappUrl;
-      })
-      .catch(error => {
-          console.error('Error saving image to Google Drive: ', error);
-      });
-    });
 
 function updateTime() {
   const now = new Date();
