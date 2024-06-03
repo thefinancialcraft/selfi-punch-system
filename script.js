@@ -273,15 +273,15 @@ function displayGreeting() {
       ctx.drawImage(video, 0, 0, containerWidth, containerHeight);
 
       // Add date and time watermark
-      ctx.font = '20px Arial';
+      ctx.font = '5vw Arial';
       ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
       var textWidth = ctx.measureText(timestamp).width;
       ctx.fillText(timestamp, containerWidth - textWidth - 10, containerHeight - 10);
 
       var snapshot = document.getElementById('snapshot');
       snapshot.src = canvas.toDataURL('image/png');
-      snapshot.style.width = containerWidth + 'px'; // Set snapshot width to video container width
-      snapshot.style.height = containerHeight + 'px'; // Set snapshot height to video container height
+      snapshot.style.width = containerWidth + 'vw'; // Set snapshot width to video container width
+      snapshot.style.height = containerHeight + 'vw'; // Set snapshot height to video container height
       snapshot.style.display = 'block';
       video.style.display = 'none';
       video.srcObject.getVideoTracks().forEach(track => track.stop());
@@ -313,7 +313,7 @@ function displayGreeting() {
           alert('Attendance recorded. Click OK to update on WhatsApp. Have a great day! ');
 
           // Create the WhatsApp message
-          var message = '*Reached*, ' + userId + ', ' + timestamp + '\nGoogle Drive Link: ' + link;
+          var message = '*Reached*, ' + userId + ', ' + timestamp + '\Link: ' + link;
 
           // Encode the message for the URL
           var encodedMessage = encodeURIComponent(message);
