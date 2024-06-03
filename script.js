@@ -229,7 +229,7 @@ function displayGreeting() {
 
   //camera part
   
- document.getElementById('punchin').addEventListener('click', function() {
+document.getElementById('punchin').addEventListener('click', function() {
     var startButton = document.getElementById('punchin');
     startButton.style.display = 'none';
     document.getElementById("img-msg-video").style.display = "none";
@@ -267,26 +267,14 @@ document.getElementById('checkin').addEventListener('click', function() {
     var formattedTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
     var timestamp = formattedDate + ' ' + formattedTime; // Get the current date and timestamp in DD/MM/YYYY hh:mm:ss am/pm format
 
-    // Start drawing the watermark in real-time
-    function drawWatermark() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear previous frame
-        
-        // Flip the video horizontally by scaling context negatively
-        ctx.save();
-        ctx.scale(-1, 1);
-        ctx.drawImage(video, -canvas.width, 0, canvas.width, canvas.height);
-        ctx.restore();
+    // Draw the current frame from the video onto the canvas
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-        // Add real-time date and time watermark
-        ctx.font = '10vw Arial'; // Set font size to 10vw
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-        var textWidth = ctx.measureText(timestamp).width;
-        ctx.fillText(timestamp, (canvas.width - textWidth) / 2, canvas.height / 2);
-
-        requestAnimationFrame(drawWatermark); // Request next frame
-    }
-
-    drawWatermark(); // Start the drawing loop
+    // Add date and time watermark
+    ctx.font = '10vw Arial'; // Set font size to 10vw
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+    var textWidth = ctx.measureText(timestamp).width;
+    ctx.fillText(timestamp, (canvas.width - textWidth) / 2, canvas.height / 2);
 
     var snapshot = document.getElementById('snapshot');
     snapshot.src = canvas.toDataURL('image/png');
