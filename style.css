@@ -679,13 +679,11 @@ body {
         position: absolute;
         top: 0;
         left: 0;
-        width: 100%;
-        height: 100%;
         transform: scaleX(-1);
         object-fit: cover;
-        width: 100%;
+        width: 85vw;
         background-color: #0089e4;
-        height: 100%;
+        height: 60vw;
         border-radius: 4vw;
     }
     
@@ -698,7 +696,7 @@ body {
         display: flex;
         justify-content: center;
         align-items: center;
-        /* background-color: #334173; */
+        background-color: #ff0000;
 
     }
     .para {
