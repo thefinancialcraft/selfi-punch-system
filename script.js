@@ -153,9 +153,13 @@ function displayGreeting() {
   }
   
   function checkin() {
-      updateTexts(['Processing... Please Wait.', 'Let\'s set the floor on fire']);
+      updateTexts(['Processing... Please Wait.']);
       document.getElementById
   }
+  function checkoutupdate() {
+    updateTexts(['Attendance successfully marked!']);
+    document.getElementById
+}
   
   // Call these functions based on your triggers
   // login();
@@ -229,7 +233,7 @@ function displayGreeting() {
 
   //camera part
   
-document.getElementById('punchin').addEventListener('click', function() {
+ document.getElementById('punchin').addEventListener('click', function() {
     var startButton = document.getElementById('punchin');
     startButton.style.display = 'none';
     document.getElementById("img-msg-video").style.display = "none";
@@ -267,14 +271,26 @@ document.getElementById('checkin').addEventListener('click', function() {
     var formattedTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
     var timestamp = formattedDate + ' ' + formattedTime; // Get the current date and timestamp in DD/MM/YYYY hh:mm:ss am/pm format
 
-    // Draw the current frame from the video onto the canvas
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    // Start drawing the watermark in real-time
+    function drawWatermark() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear previous frame
+        
+        // Flip the video horizontally by scaling context negatively
+        ctx.save();
+        ctx.scale(-1, 1);
+        ctx.drawImage(video, -canvas.width, 0, canvas.width, canvas.height);
+        ctx.restore();
 
-    // Add date and time watermark
-    ctx.font = '10vw Arial'; // Set font size to 10vw
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-    var textWidth = ctx.measureText(timestamp).width;
-    ctx.fillText(timestamp, (canvas.width - textWidth) / 2, canvas.height / 2);
+        // Add real-time date and time watermark
+        ctx.font = '10vw Arial'; // Set font size to 10vw
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+        var textWidth = ctx.measureText(timestamp).width;
+        ctx.fillText(timestamp, (canvas.width - textWidth) / 2, canvas.height / 2);
+
+        requestAnimationFrame(drawWatermark); // Request next frame
+    }
+
+    drawWatermark(); // Start the drawing loop
 
     var snapshot = document.getElementById('snapshot');
     snapshot.src = canvas.toDataURL('image/png');
@@ -301,26 +317,45 @@ document.getElementById('checkin').addEventListener('click', function() {
         body: 'imageData=' + encodeURIComponent(imageData) + 
               '&userId=' + encodeURIComponent(userId) + 
               '&timestamp=' + encodeURIComponent(timestamp)
+              
     })
+    
     .then(response => response.text())
     .then(link => {
-        console.log('Attendance recorded. Click OK to update on WhatsApp. Have a great day!');
-        // Display or use the link as needed
-        alert('Attendance recorded. Click OK to update on WhatsApp. Have a great day! ');
-
-        // Create the WhatsApp message
-        var message = '*Reached*, ' + userId + ', ' + timestamp + '\nGoogle Drive Link: ' + link;
-
-        // Encode the message for the URL
-        var encodedMessage = encodeURIComponent(message);
-
-        // Create the WhatsApp URL
-        var whatsappUrl = 'https://wa.me/?text=' + encodedMessage;
-
-        // Redirect to the WhatsApp URL
-        window.open(whatsappUrl, '_blank');
-
-    })
+      checkoutupdate(); // Run checkoutupdate function before the rest of the code
+  
+      setTimeout(() => {
+          console.log('Attendance recorded. Click OK to update on WhatsApp. Have a great day!');
+          // Display or use the link as needed
+          alert('Attendance recorded. Click OK to update on WhatsApp. Have a great day! ');
+  
+          // Enable and change the color of the checkout button after generating the Google Drive URL
+          var checkoutButton = document.getElementById('checkout');
+          checkoutButton.disabled = false;
+          checkoutButton.classList.add('active');
+  
+          // Create the WhatsApp message function
+          function sendWhatsAppMessage() {
+              var message = '*Reached*, ' + userId + ', ' + timestamp + '\nGoogle Drive Link: ' + link;
+  
+              // Encode the message for the URL
+              var encodedMessage = encodeURIComponent(message);
+  
+              // Create the WhatsApp URL
+              var whatsappUrl = 'https://wa.me/?text=' + encodedMessage;
+  
+              // Redirect to the WhatsApp URL
+              window.open(whatsappUrl, '_blank');
+          }
+  
+          // Call the function initially
+          sendWhatsAppMessage();
+  
+          // Add event listener to the checkout button
+          checkoutButton.addEventListener('click', sendWhatsAppMessage);
+      }, 3000); // Delay of 1 second (1000 milliseconds)
+  })
+  
     .catch(error => {
         console.error('Error saving image to Google Drive: ', error);
     });
