@@ -25,6 +25,7 @@ body {
     justify-content: center;
     align-items: center;
     scrollbar-width: 0;
+    background-image: linear-gradient(to right bottom, #354273, #3c497c, #435184, #4a588d, #516096, #4f6fa7, #4c7eb7, #478ec6, #30aadb, #1dc6e9, #33e1f0, #5ffbf1);
 }
 body::-webkit-scrollbar {
     display: none;
