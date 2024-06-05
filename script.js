@@ -315,9 +315,9 @@ document.getElementById('checkin').addEventListener('click', function() {
 
   // Check the current time and set the status accordingly
   let status = '';
-  if (formattedTime >= '06:00' && formattedTime < '06:01') {
+  if (formattedTime >= '06:00' && formattedTime < '10:01') {
     status = 'P';
-  } else if (formattedTime >= '06:01' && formattedTime < '06:37') {
+  } else if (formattedTime >= '10:01' && formattedTime < '10:31') {
     status = 'L';
   } else if (formattedTime >= '10:31' && formattedTime < '20:00') {
     status = 'H';
