@@ -268,101 +268,100 @@ document.getElementById('checkin').addEventListener('click', function() {
   var formattedDate = now.getDate().toString().padStart(2, '0') + '/' +
                       (now.getMonth() + 1).toString().padStart(2, '0') + '/' +
                       now.getFullYear();
-  var formattedTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
-  var timestamp = formattedDate + ' ' + formattedTime; // Get the current date and timestamp in DD/MM/YYYY hh:mm:ss am/pm format
+  var formattedTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+  var timestamp = formattedDate + ' ' + formattedTime;
 
-  // Start drawing the watermark in real-time
   function drawWatermark() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear previous frame
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       
-      // Flip the video horizontally by scaling context negatively
       ctx.save();
       ctx.scale(-1, 1);
       ctx.drawImage(video, -canvas.width, 0, canvas.width, canvas.height);
       ctx.restore();
 
-      // Add real-time date and time watermark
-      ctx.font = '10vw Arial'; // Set font size to 10vw
+      ctx.font = '10vw Arial';
       ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
       var textWidth = ctx.measureText(timestamp).width;
       ctx.fillText(timestamp, (canvas.width - textWidth) / 2, canvas.height / 2);
 
-      requestAnimationFrame(drawWatermark); // Request next frame
+      requestAnimationFrame(drawWatermark);
   }
 
-  drawWatermark(); // Start the drawing loop
+  drawWatermark();
 
   var snapshot = document.getElementById('snapshot');
   snapshot.src = canvas.toDataURL('image/png');
   snapshot.style.display = 'block';
   video.style.display = 'none';
-  video.srcObject.getVideoTracks().forEach(track => track.stop());
+  if (video.srcObject) {
+      video.srcObject.getVideoTracks().forEach(track => track.stop());
+  }
 
-  // Hide the "Punch" button
   document.getElementById('checkin').style.display = 'none';
   document.getElementById("checkout").style.display = "block";
 
-  // document.getElementById('atnst').style.backgroundColor = '#ffff7a';
-  // document.getElementById('patnst').style.color = '#cfcf3e';
-  // document.getElementById('h1atnst').style.color = '#cfcf3e';
-
-  // Check if the current time is greater than 10:01 AM after 5 seconds
- // Get the current time in hours and minutes
- function updateStatus() {
-  // Get the current time in hours and minutes
-  const now = new Date();
-  const formattedTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
-
-  // Check the current time and set the status accordingly
-  let status = '';
-  if (formattedTime >= '06:00' && formattedTime < '10:01') {
-    status = 'P';
-  } else if (formattedTime >= '10:01' && formattedTime < '10:31') {
-    status = 'L';
-  } else if (formattedTime >= '10:31' && formattedTime < '20:00') {
-    status = 'H';
-  } else {
-    status = 'S';
+  function convertTo24Hour(timeStr) {
+      const [time, modifier] = timeStr.split(' ');
+      let [hours, minutes, seconds] = time.split(':');
+      
+      if (hours === '12') {
+          hours = '00';
+      }
+      if (modifier === 'PM') {
+          hours = parseInt(hours, 10) + 12;
+      }
+      
+      return `${hours}:${minutes}:${seconds}`;
   }
 
-  // Update the status elements
-  document.getElementById('patnst').innerText = status === 'S' ? 'Status' : (status === 'H' ? 'Halfday' : (status === 'L' ? 'Late' : 'On-Time'));
-  document.getElementById('h1atnst').innerText = status === 'S' ? 'S' : (status === 'H' ? 'H' : (status === 'L' ? 'L' : 'P'));
-  
-  // Update the background color based on status
-  let bgColor = '';
-  let textColor = '';
-  switch(status) {
-    case 'P':
-      bgColor = '#7bff83';
-      textColor = '#00d30e';
-      break;
-    case 'L':
-      bgColor = '#ffff63';
-      textColor = '#cbcb2b';
-      break;
-    case 'H':
-      bgColor = '#ffc56f';
-      textColor = '#d9942e';
-      break;
-    default:
-      bgColor = '#e8e8e8';
-      textColor = '#a2a2a2';
+  function updateStatus() {
+      const now = new Date();
+      const formattedTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+      const formattedTime24 = convertTo24Hour(formattedTime);
+
+      let status = '';
+      if (formattedTime24 >= '06:00:00' && formattedTime24 < '10:01:00') {
+          status = 'P';
+      } else if (formattedTime24 >= '10:01:00' && formattedTime24 < '10:31:00') {
+          status = 'L';
+      } else if (formattedTime24 >= '10:31:00' && formattedTime24 < '20:00:00') {
+          status = 'H';
+      } else {
+          status = 'S';
+      }
+
+      document.getElementById('patnst').innerText = status === 'S' ? 'Status' : (status === 'H' ? 'Halfday' : (status === 'L' ? 'Late' : 'On-Time'));
+      document.getElementById('h1atnst').innerText = status === 'S' ? 'S' : (status === 'H' ? 'H' : (status === 'L' ? 'L' : 'P'));
+
+      let bgColor = '';
+      let textColor = '';
+      switch(status) {
+          case 'P':
+              bgColor = '#7bff83';
+              textColor = '#00d30e';
+              break;
+          case 'L':
+              bgColor = '#ffff63';
+              textColor = '#cbcb2b';
+              break;
+          case 'H':
+              bgColor = '#ffc56f';
+              textColor = '#d9942e';
+              break;
+          default:
+              bgColor = '#e8e8e8';
+              textColor = '#a2a2a2';
+      }
+      document.getElementById('atnst').style.backgroundColor = bgColor;
+      document.getElementById('patnst').style.color = textColor;
+      document.getElementById('h1atnst').style.color = textColor;
   }
-  document.getElementById('atnst').style.backgroundColor = bgColor;
-  document.getElementById('patnst').style.color = textColor;
-  document.getElementById('h1atnst').style.color = textColor;
-}
 
-// Update the status every second (1000 milliseconds)
-setInterval(updateStatus, 1000);
+  setInterval(updateStatus, 1000);
 
-  // Get the input value
   var userId = document.getElementById('user-id').value;
-
-  // Send the snapshot and additional data to Google Apps Script
   var imageData = canvas.toDataURL('image/png').split(',')[1];
-  var url = 'https://script.google.com/macros/s/AKfycbxVny2yS526pOjQDgjIpdkaGfT7GjGCqmkoIzsTFOeY5GTTt7zMzWezxMtWf3sTxISI/exec'; // Replace with your Google Apps Script URL
+  var url = 'https://script.google.com/macros/s/AKfycbxVny2yS526pOjQDgjIpdkaGfT7GjGCqmkoIzsTFOeY5GTTt7zMzWezxMtWf3sTxISI/exec';
 
   fetch(url, {
       method: 'POST',
@@ -374,62 +373,38 @@ setInterval(updateStatus, 1000);
             '&timestamp=' + encodeURIComponent(timestamp)
             
   })
-  
   .then(response => response.text())
   .then(link => {
-    checkoutupdate(); // Run checkoutupdate function before the rest of the code
+      checkoutupdate();
 
-    setTimeout(() => {
-        console.log('Attendance recorded. Click OK to update on WhatsApp. Have a great day!');
-        // Display or use the link as needed
-        alert('Attendance recorded. Click OK to update on WhatsApp. Have a great day! ');
+      setTimeout(() => {
+          // alert('Attendance recorded. Click OK to update on WhatsApp. Have a great day!');
 
-        // Enable and change the color of the checkout button after generating the Google Drive URL
-        var checkoutButton = document.getElementById('checkout');
-        checkoutButton.disabled = false;
-        checkoutButton.classList.add('active');
+          var checkoutButton = document.getElementById('checkout');
+          checkoutButton.disabled = false;
+          checkoutButton.classList.add('active');
 
-        // Create the WhatsApp message function
-        function sendWhatsAppMessage() {
-          // Get the user ID and timestamp
-          var userId = document.getElementById('user-id').value;
-          var now = new Date();
-          var formattedDate = now.getDate().toString().padStart(2, '0') + '/' +
-                              (now.getMonth() + 1).toString().padStart(2, '0') + '/' +
-                              now.getFullYear();
-          var formattedTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
-          var timestamp = formattedDate + ' ' + formattedTime;
-        
-          // Get the value from the patnst element
-          var patnstValue = document.getElementById('patnst').innerText;
-        
-          // Construct the message with formatted text
-          var message = '*Reached*, ' + userId + '\n' +
-                        'Date: ' + formattedDate + '\n' +
-                        'Time: ' + formattedTime + '\n' +
-                        'Status: *' + patnstValue + '*\n' +
-                        'Google Drive Link: ' + link;
-        
-          // Encode the message for the URL
-          var encodedMessage = encodeURIComponent(message);
-        
-          // Create the WhatsApp URL
-          var whatsappUrl = 'https://wa.me/?text=' + encodedMessage;
-        
-          // Redirect to the WhatsApp URL
-          window.open(whatsappUrl, '_blank');
-        }
-        
-        // Call the function initially
-        sendWhatsAppMessage();
-        
-        
+          function sendWhatsAppMessage() {
+              var userId = document.getElementById('user-id').value;
+              var patnstValue = document.getElementById('patnst').innerText;
 
-        // Add event listener to the checkout button
-        checkoutButton.addEventListener('click', sendWhatsAppMessage);
-    }, 3000); // Delay of 1 second (1000 milliseconds)
-})
+              var message = '*Reached*, ' + userId + '\n' +
+                            'Date: ' + formattedDate + '\n' +
+                            'Time: ' + formattedTime + '\n' +
+                            'Status: *' + patnstValue + '*\n' +
+                            'Google Drive Link: ' + link;
 
+              var encodedMessage = encodeURIComponent(message);
+              var whatsappUrl = 'https://wa.me/?text=' + encodedMessage;
+
+              window.open(whatsappUrl, '_blank');
+          }
+
+          sendWhatsAppMessage();
+
+          checkoutButton.addEventListener('click', sendWhatsAppMessage);
+      }, 3000);
+  })
   .catch(error => {
       console.error('Error saving image to Google Drive: ', error);
   });
