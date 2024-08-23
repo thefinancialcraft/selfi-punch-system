@@ -136,6 +136,18 @@
       "Emp. Code": "TFC-024", 
       "Blood Grp": "B+",
       "Contact No.": "9310415565",
+      "Profile Pic": null },
+    { "Sno": 24,
+      "User Name": "RAHUL CHAUHAN",
+      "Emp. Code": "TFC-024", 
+      "Blood Grp": "B+",
+      "Contact No.": "9310415565",
+      "Profile Pic": null },
+    { "Sno": 25,
+      "User Name": "RAJ KUMAR",
+      "Emp. Code": "TFC-025", 
+      "Blood Grp": "B+",
+      "Contact No.": "Not Updated",
       "Profile Pic": null }
   ]
   
